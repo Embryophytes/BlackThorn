@@ -1,0 +1,9 @@
+[package]
+name = "BlackThorn"
+version = "0.1.0"
+description = "A free, simple tool for creating database diagrams"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/rust-lang/cargo"
+
+[dependencies]
