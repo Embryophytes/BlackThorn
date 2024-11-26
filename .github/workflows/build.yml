@@ -10,7 +10,7 @@ on:
     branches:
       - main
       - develop
-      - feature/BTH-*/*
+      - 'feature/BTH-*/*'
 
 jobs:
   build:
