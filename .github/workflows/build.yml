@@ -30,6 +30,13 @@ jobs:
         override: true
         components: clippy, rustfmt
 
+    # Install required dependencies for alsa (libasound2-dev), udev (libudev-dev), Wayland (libwayland-dev), xkb (libxkbcommon-dev)
+    - name: Install Linux dependencies
+      run: >
+        sudo apt-get update
+
+        sudo apt-get install --no-install-recommends g++ pkg-config libx11-dev libasound2-dev libudev-dev libwayland-dev libxkbcommon-x11-0
+
     # Cache dependencies
     - name: Cache Cargo registry
       uses: actions/cache@v3
