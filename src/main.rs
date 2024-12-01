@@ -1,5 +1,7 @@
-use bevy::prelude::*;
+use bevy::app::App;
+
+use blackthorn::BlackThornPlugin;
 
 fn main() {
-    App::new().add_plugins(DefaultPlugins).run();
+    App::new().add_plugins(BlackThornPlugin::default()).run();
 }
