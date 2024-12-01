@@ -1,0 +1,65 @@
+name: Rust CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'feature/BTH-*/*'
+
+jobs:
+  build:
+    name: Build, Test, and Lint
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Install Rust using rustup
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        components: clippy, rustfmt
+
+    # Install required dependencies for alsa (libasound2-dev), udev (libudev-dev), Wayland (libwayland-dev), xkb (libxkbcommon-dev)
+    - name: Install Linux dependencies
+      run: >
+        sudo apt-get update
+
+        sudo apt-get install --no-install-recommends g++ pkg-config libx11-dev libasound2-dev libudev-dev libwayland-dev libxkbcommon-x11-0
+
+    # Cache dependencies
+    - name: Cache Cargo registry
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+
+    # Build the project
+    - name: Build
+      run: cargo build --workspace --all-targets
+
+    # Run tests
+    - name: Run tests
+      run: cargo test --workspace --all-targets
+
+    # Run clippy for linting
+    - name: Run Clippy
+      run: cargo clippy --workspace --all-targets -- -D warnings
+
+    # Run rustfmt for formatting check
+    - name: Check Formatting
+      run: cargo fmt -- --check
