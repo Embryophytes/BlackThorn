@@ -1,5 +1,5 @@
 #[macro_export]
-macro_rules! menu_button {
+macro_rules! add_menu_button {
     (
         $ui:ident,
         $label:literal,
@@ -29,7 +29,7 @@ macro_rules! menu_button {
 }
 
 #[macro_export]
-macro_rules! submenu {
+macro_rules! add_submenu {
     (
         $ui:ident,
         $label:literal,
@@ -48,7 +48,7 @@ macro_rules! submenu {
             ui.visuals_mut().menu_rounding = 0f32.into();
 
             $(
-                menu_button!(ui, $($enabled, )? $tag, $action $(, $shortcut)?);
+                add_menu_button!(ui, $($enabled, )? $tag, $action $(, $shortcut)?);
             )+
         })
         .response

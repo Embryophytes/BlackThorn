@@ -10,8 +10,8 @@ use bevy_egui::egui::TopBottomPanel;
 use bevy_egui::EguiContexts;
 use bevy_egui::EguiPlugin;
 
-use crate::menu_button;
-use crate::submenu;
+use crate::add_menu_button;
+use crate::add_submenu;
 
 use crate::OccupiedScreenSpace;
 use crate::OriginalCameraTransform;
@@ -49,7 +49,7 @@ fn egui_system(
                 spacing.item_spacing = [2f32; 2].into();
                 ui.visuals_mut().menu_rounding = 0f32.into();
 
-                submenu!(
+                add_submenu!(
                     ui,
                     "File",
                     ("Quit", "Ctrl + Q", {
