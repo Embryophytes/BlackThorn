@@ -10,8 +10,13 @@ use bevy_egui::egui::TopBottomPanel;
 use bevy_egui::EguiContexts;
 use bevy_egui::EguiPlugin;
 
+use crate::menu_button;
+use crate::submenu;
+
 use crate::OccupiedScreenSpace;
 use crate::OriginalCameraTransform;
+
+mod core;
 
 const MENU_BAR_HEIGHT: f32 = 34f32;
 const CAMERA_TARGET: Vec3 = Vec3::ZERO;
@@ -44,23 +49,13 @@ fn egui_system(
                 spacing.item_spacing = [2f32; 2].into();
                 ui.visuals_mut().menu_rounding = 0f32.into();
 
-                egui::menu::menu_button(ui, "File", |ui| {
-                    ui.set_min_width(200f32);
-                    let spacing = ui.spacing_mut();
-                    spacing.button_padding = [6f32; 2].into();
-                    spacing.item_spacing = [2f32; 2].into();
-                    ui.visuals_mut().menu_rounding = 0f32.into();
-
-                    if ui
-                        .add(egui::Button::new("Quit").shortcut_text("Ctrl + Q"))
-                        .clicked()
-                    {
+                submenu!(
+                    ui,
+                    "File",
+                    ("Quit", "Ctrl + Q", {
                         exit.send(AppExit::Success);
-                        ui.close_menu();
-                    }
-                })
-                .response
-                .hovered();
+                    })
+                );
             });
             ui.allocate_rect(ui.available_rect_before_wrap(), egui::Sense::hover());
         })
