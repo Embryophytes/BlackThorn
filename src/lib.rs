@@ -1,8 +1,11 @@
+use core::InitializeApp;
+
 use bevy::prelude::*;
 use bevy::window::PresentMode;
 
 use ui::BlackThornUIPlugin;
 
+mod core;
 mod ui;
 
 #[derive(Resource, Deref, DerefMut)]
@@ -13,8 +16,7 @@ const CAMERA_TARGET: Vec3 = Vec3::ZERO;
 
 /// The main plugin.
 #[must_use]
-#[derive(Default)]
-pub struct BlackThornPlugin {}
+pub struct BlackThornPlugin;
 
 impl Plugin for BlackThornPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
@@ -34,6 +36,7 @@ impl Plugin for BlackThornPlugin {
             primary_window: Some(window),
             ..Default::default()
         }))
+        .add_plugins(InitializeApp)
         .add_plugins(BlackThornUIPlugin)
         .add_systems(Startup, setup_system);
     }
