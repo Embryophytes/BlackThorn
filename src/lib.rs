@@ -13,13 +13,11 @@ struct OccupiedScreenSpace {
     bottom: f32,
 }
 
-
 #[derive(Resource, Deref, DerefMut)]
 struct OriginalCameraTransform(Transform);
 
 const NAME: &str = "BlackThorn";
 const CAMERA_TARGET: Vec3 = Vec3::ZERO;
-
 
 /// The main plugin.
 #[must_use]
@@ -45,9 +43,7 @@ impl Plugin for BlackThornPlugin {
             ..Default::default()
         }))
         .add_plugins(BlackThornUIPlugin::default())
-
         .init_resource::<OccupiedScreenSpace>()
-        
         .add_systems(Startup, setup_system);
     }
 }
