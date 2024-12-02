@@ -1,10 +1,10 @@
-use app_state::AppState;
+use state::AppState;
 use bevy::app::Plugin;
 
 use config::AppConfig;
 
-pub mod app_state;
 pub mod config;
+pub mod state;
 
 #[derive(Default)]
 pub struct Initialize {}
