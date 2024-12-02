@@ -5,14 +5,6 @@ use ui::BlackThornUIPlugin;
 
 mod ui;
 
-#[derive(Default, Resource)]
-struct OccupiedScreenSpace {
-    left: f32,
-    top: f32,
-    right: f32,
-    bottom: f32,
-}
-
 #[derive(Resource, Deref, DerefMut)]
 struct OriginalCameraTransform(Transform);
 
@@ -42,8 +34,7 @@ impl Plugin for BlackThornPlugin {
             primary_window: Some(window),
             ..Default::default()
         }))
-        .add_plugins(BlackThornUIPlugin::default())
-        .init_resource::<OccupiedScreenSpace>()
+        .add_plugins(BlackThornUIPlugin)
         .add_systems(Startup, setup_system);
     }
 }
