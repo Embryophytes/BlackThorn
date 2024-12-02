@@ -23,8 +23,8 @@ pub struct BlackThornUIPlugin {}
 impl Plugin for BlackThornUIPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.add_plugins(EguiPlugin)
-        .add_systems(Update, egui_system)
-        .add_systems(Update, update_camera_transform_system);
+            .add_systems(Update, egui_system)
+            .add_systems(Update, update_camera_transform_system);
     }
 }
 
