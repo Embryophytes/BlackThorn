@@ -1,7 +1,7 @@
 [package]
 edition = "2021"
 
-name = "BlackThorn"
+name = "blackthorn"
 version = "0.1.0"
 description = "A free, simple tool for creating database diagrams"
 
@@ -10,4 +10,5 @@ readme = "README.md"
 repository = "https://github.com/rust-lang/cargo"
 
 [dependencies]
-bevy = "0.14.2"
+bevy = "0.15.0"
+bevy_egui = "0.31"
