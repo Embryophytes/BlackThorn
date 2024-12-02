@@ -1,3 +1,6 @@
+use core::state::UIState;
+use core::InitializeUI;
+
 use bevy::app::AppExit;
 use bevy::app::Plugin;
 use bevy::app::Update;
@@ -13,7 +16,6 @@ use bevy_egui::EguiPlugin;
 use crate::add_menu_button;
 use crate::add_submenu;
 
-use crate::OccupiedScreenSpace;
 use crate::OriginalCameraTransform;
 
 mod core;
@@ -22,12 +24,12 @@ const MENU_BAR_HEIGHT: f32 = 34f32;
 const CAMERA_TARGET: Vec3 = Vec3::ZERO;
 
 #[must_use]
-#[derive(Default)]
-pub struct BlackThornUIPlugin {}
+pub struct BlackThornUIPlugin;
 
 impl Plugin for BlackThornUIPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.add_plugins(EguiPlugin)
+            .add_plugins(InitializeUI)
             .add_systems(Update, egui_system)
             .add_systems(Update, update_camera_transform_system);
     }
@@ -35,68 +37,80 @@ impl Plugin for BlackThornUIPlugin {
 
 fn egui_system(
     mut contexts: EguiContexts,
-    mut occupied_screen_space: ResMut<OccupiedScreenSpace>,
+    mut ui_state: ResMut<UIState>,
     mut exit: EventWriter<AppExit>,
 ) {
     let ctx = contexts.ctx_mut();
 
-    occupied_screen_space.top = TopBottomPanel::top("top_panel")
-        .exact_height(MENU_BAR_HEIGHT)
-        .show(ctx, |ui| {
-            egui::menu::bar(ui, |ui| {
-                let spacing = ui.spacing_mut();
-                spacing.button_padding = [6f32; 2].into();
-                spacing.item_spacing = [2f32; 2].into();
-                ui.visuals_mut().menu_rounding = 0f32.into();
+    let occupied_screen_space = ui_state.occupied_space_mut();
 
-                add_submenu!(
-                    ui,
-                    "File",
-                    ("Quit", "Ctrl + Q", {
-                        exit.send(AppExit::Success);
-                    })
-                );
-            });
-            ui.allocate_rect(ui.available_rect_before_wrap(), egui::Sense::hover());
-        })
-        .response
-        .rect
-        .height();
+    occupied_screen_space.set_top(
+        TopBottomPanel::top("top_panel")
+            .exact_height(MENU_BAR_HEIGHT)
+            .show(ctx, |ui| {
+                egui::menu::bar(ui, |ui| {
+                    let spacing = ui.spacing_mut();
+                    spacing.button_padding = [6f32; 2].into();
+                    spacing.item_spacing = [2f32; 2].into();
+                    ui.visuals_mut().menu_rounding = 0f32.into();
 
-    occupied_screen_space.left = egui::SidePanel::left("left_panel")
-        .resizable(true)
-        .show(ctx, |ui| {
-            ui.allocate_rect(ui.available_rect_before_wrap(), egui::Sense::hover());
-        })
-        .response
-        .rect
-        .width();
+                    add_submenu!(
+                        ui,
+                        "File",
+                        ("Quit", "Ctrl + Q", {
+                            exit.send(AppExit::Success);
+                        })
+                    );
+                });
+                ui.allocate_rect(ui.available_rect_before_wrap(), egui::Sense::hover());
+            })
+            .response
+            .rect
+            .height(),
+    );
 
-    occupied_screen_space.right = egui::SidePanel::right("right_panel")
-        .resizable(true)
-        .show(ctx, |ui| {
-            ui.allocate_rect(ui.available_rect_before_wrap(), egui::Sense::hover());
-        })
-        .response
-        .rect
-        .width();
+    occupied_screen_space.set_left(
+        egui::SidePanel::left("left_panel")
+            .resizable(true)
+            .show(ctx, |ui| {
+                ui.allocate_rect(ui.available_rect_before_wrap(), egui::Sense::hover());
+            })
+            .response
+            .rect
+            .width(),
+    );
 
-    occupied_screen_space.bottom = egui::TopBottomPanel::bottom("bottom_panel")
-        .resizable(true)
-        .show(ctx, |ui| {
-            ui.allocate_rect(ui.available_rect_before_wrap(), egui::Sense::hover());
-        })
-        .response
-        .rect
-        .height();
+    occupied_screen_space.set_right(
+        egui::SidePanel::right("right_panel")
+            .resizable(true)
+            .show(ctx, |ui| {
+                ui.allocate_rect(ui.available_rect_before_wrap(), egui::Sense::hover());
+            })
+            .response
+            .rect
+            .width(),
+    );
+
+    occupied_screen_space.set_bottom(
+        egui::TopBottomPanel::bottom("bottom_panel")
+            .resizable(true)
+            .show(ctx, |ui| {
+                ui.allocate_rect(ui.available_rect_before_wrap(), egui::Sense::hover());
+            })
+            .response
+            .rect
+            .height(),
+    );
 }
 
 fn update_camera_transform_system(
-    occupied_screen_space: Res<OccupiedScreenSpace>,
+    ui_state: Res<UIState>,
     original_camera_transform: Res<OriginalCameraTransform>,
     windows: Query<&Window, With<PrimaryWindow>>,
     mut camera_query: Query<(&Projection, &mut Transform)>,
 ) {
+    let occupied_screen_space = ui_state.occupied_space();
+
     let (camera_projection, mut transform) = match camera_query.get_single_mut() {
         Ok((Projection::Perspective(projection), transform)) => (projection, transform),
         _ => unreachable!(),
@@ -108,10 +122,10 @@ fn update_camera_transform_system(
 
     let window = windows.single();
 
-    let left_taken = occupied_screen_space.left / window.width();
-    let right_taken = occupied_screen_space.right / window.width();
-    let top_taken = occupied_screen_space.top / window.height();
-    let bottom_taken = occupied_screen_space.bottom / window.height();
+    let left_taken = occupied_screen_space.left() / window.width();
+    let right_taken = occupied_screen_space.right() / window.width();
+    let top_taken = occupied_screen_space.top() / window.height();
+    let bottom_taken = occupied_screen_space.bottom() / window.height();
     transform.translation = original_camera_transform.translation
         + transform.rotation.mul_vec3(Vec3::new(
             (right_taken - left_taken) * frustum_width * 0.5,

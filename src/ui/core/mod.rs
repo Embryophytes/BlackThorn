@@ -1,3 +1,19 @@
+use bevy::app::Plugin;
+use config::UIConfig;
+use state::UIState;
+
+pub mod config;
+pub mod state;
+
+pub struct InitializeUI;
+
+impl Plugin for InitializeUI {
+    fn build(&self, app: &mut bevy::prelude::App) {
+        app.insert_resource(UIConfig::default())
+            .insert_resource(UIState::default());
+    }
+}
+
 #[macro_export]
 macro_rules! add_menu_button {
     (
