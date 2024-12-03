@@ -4,15 +4,13 @@ use bevy::prelude::*;
 use bevy::window::PresentMode;
 
 use ui::BlackThornUIPlugin;
+use viewport::BlackThornViewportPlugin;
 
 mod core;
 mod ui;
-
-#[derive(Resource, Deref, DerefMut)]
-struct OriginalCameraTransform(Transform);
+mod viewport;
 
 const NAME: &str = "BlackThorn";
-const CAMERA_TARGET: Vec3 = Vec3::ZERO;
 
 /// The main plugin.
 #[must_use]
@@ -38,37 +36,6 @@ impl Plugin for BlackThornPlugin {
         }))
         .add_plugins(InitializeApp)
         .add_plugins(BlackThornUIPlugin)
-        .add_systems(Startup, setup_system);
+        .add_plugins(BlackThornViewportPlugin);
     }
-}
-
-fn setup_system(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
-    commands.spawn((
-        Mesh3d(meshes.add(Plane3d::default().mesh().size(5.0, 5.0))),
-        MeshMaterial3d(materials.add(Color::srgb(0.3, 0.5, 0.3))),
-    ));
-    commands.spawn((
-        Mesh3d(meshes.add(Cuboid::new(1.0, 1.0, 1.0))),
-        MeshMaterial3d(materials.add(Color::srgb(0.8, 0.7, 0.6))),
-        Transform::from_xyz(0.0, 0.5, 0.0),
-    ));
-    commands.spawn((
-        PointLight {
-            intensity: 1500.0,
-            shadows_enabled: true,
-            ..Default::default()
-        },
-        Transform::from_xyz(4.0, 8.0, 4.0),
-    ));
-
-    let camera_pos = Vec3::new(-2.0, 2.5, 5.0);
-    let camera_transform =
-        Transform::from_translation(camera_pos).looking_at(CAMERA_TARGET, Vec3::Y);
-    commands.insert_resource(OriginalCameraTransform(camera_transform));
-
-    commands.spawn((Camera3d::default(), camera_transform));
 }
