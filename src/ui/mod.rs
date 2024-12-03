@@ -7,7 +7,6 @@ use bevy::app::Update;
 
 use bevy::prelude::*;
 
-use bevy::window::PrimaryWindow;
 use bevy_egui::egui;
 use bevy_egui::egui::TopBottomPanel;
 use bevy_egui::EguiContexts;
@@ -19,7 +18,6 @@ use crate::add_submenu;
 mod core;
 
 const MENU_BAR_HEIGHT: f32 = 34f32;
-const CAMERA_TARGET: Vec3 = Vec3::ZERO;
 
 #[must_use]
 pub struct BlackThornUIPlugin;
