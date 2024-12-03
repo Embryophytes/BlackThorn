@@ -4,9 +4,11 @@ use bevy::prelude::*;
 use bevy::window::PresentMode;
 
 use ui::BlackThornUIPlugin;
+use viewport::BlackThornViewportPlugin;
 
 mod core;
 mod ui;
+mod viewport;
 
 const NAME: &str = "BlackThorn";
 
@@ -33,6 +35,7 @@ impl Plugin for BlackThornPlugin {
             ..Default::default()
         }))
         .add_plugins(InitializeApp)
-        .add_plugins(BlackThornUIPlugin);
+        .add_plugins(BlackThornUIPlugin)
+        .add_plugins(BlackThornViewportPlugin);
     }
 }
