@@ -15,7 +15,7 @@ use bevy_egui::EguiPlugin;
 use crate::add_menu_button;
 use crate::add_submenu;
 
-mod core;
+pub mod core;
 
 const MENU_BAR_HEIGHT: f32 = 34f32;
 
