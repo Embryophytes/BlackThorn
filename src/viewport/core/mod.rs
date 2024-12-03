@@ -6,7 +6,6 @@ use camera::ViewportCamera;
 use config::ViewportConfig;
 use state::ViewportState;
 
-
 pub mod camera;
 pub mod config;
 pub mod state;

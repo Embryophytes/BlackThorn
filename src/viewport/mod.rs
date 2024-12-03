@@ -11,6 +11,6 @@ pub struct BlackThornViewportPlugin;
 impl Plugin for BlackThornViewportPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.add_plugins(InitializeViewport)
-        .add_plugins(UpdateViewportPlugin);
+            .add_plugins(UpdateViewportPlugin);
     }
 }
