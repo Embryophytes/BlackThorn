@@ -1,6 +1,7 @@
 use bevy::prelude::*;
-use bevy::app::Startup;
+
 use bevy::app::Plugin;
+use bevy::app::Startup;
 use config::ViewportConfig;
 use state::ViewportState;
 
@@ -26,10 +27,7 @@ fn initialize_camera(
 ) {
     const X_EXTENT: f32 = 900.;
 
-    commands.spawn((
-        Camera2d,
-        ViewportCamera
-    ));
+    commands.spawn((Camera2d, ViewportCamera));
 
     let shapes = [
         meshes.add(Circle::new(50.0)),
