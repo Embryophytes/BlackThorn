@@ -2,11 +2,12 @@ use bevy::prelude::*;
 
 use bevy::app::Plugin;
 use bevy::app::Startup;
+use camera::ViewportCamera;
 use config::ViewportConfig;
 use state::ViewportState;
 
-use super::camera::ViewportCamera;
 
+pub mod camera;
 pub mod config;
 pub mod state;
 
