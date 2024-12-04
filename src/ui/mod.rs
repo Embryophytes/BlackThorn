@@ -7,7 +7,6 @@ use bevy::app::Update;
 
 use bevy::prelude::*;
 
-use bevy::window::PrimaryWindow;
 use bevy_egui::egui;
 use bevy_egui::egui::TopBottomPanel;
 use bevy_egui::EguiContexts;
@@ -16,12 +15,9 @@ use bevy_egui::EguiPlugin;
 use crate::add_menu_button;
 use crate::add_submenu;
 
-use crate::OriginalCameraTransform;
-
-mod core;
+pub mod core;
 
 const MENU_BAR_HEIGHT: f32 = 34f32;
-const CAMERA_TARGET: Vec3 = Vec3::ZERO;
 
 #[must_use]
 pub struct BlackThornUIPlugin;
@@ -30,8 +26,7 @@ impl Plugin for BlackThornUIPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.add_plugins(EguiPlugin)
             .add_plugins(InitializeUI)
-            .add_systems(Update, egui_system)
-            .add_systems(Update, update_camera_transform_system);
+            .add_systems(Update, egui_system);
     }
 }
 
@@ -101,35 +96,4 @@ fn egui_system(
             .rect
             .height(),
     );
-}
-
-fn update_camera_transform_system(
-    ui_state: Res<UIState>,
-    original_camera_transform: Res<OriginalCameraTransform>,
-    windows: Query<&Window, With<PrimaryWindow>>,
-    mut camera_query: Query<(&Projection, &mut Transform)>,
-) {
-    let occupied_screen_space = ui_state.occupied_space();
-
-    let (camera_projection, mut transform) = match camera_query.get_single_mut() {
-        Ok((Projection::Perspective(projection), transform)) => (projection, transform),
-        _ => unreachable!(),
-    };
-
-    let distance_to_target = (CAMERA_TARGET - original_camera_transform.translation).length();
-    let frustum_height = 2.0 * distance_to_target * (camera_projection.fov * 0.5).tan();
-    let frustum_width = frustum_height * camera_projection.aspect_ratio;
-
-    let window = windows.single();
-
-    let left_taken = occupied_screen_space.left() / window.width();
-    let right_taken = occupied_screen_space.right() / window.width();
-    let top_taken = occupied_screen_space.top() / window.height();
-    let bottom_taken = occupied_screen_space.bottom() / window.height();
-    transform.translation = original_camera_transform.translation
-        + transform.rotation.mul_vec3(Vec3::new(
-            (right_taken - left_taken) * frustum_width * 0.5,
-            (top_taken - bottom_taken) * frustum_height * 0.5,
-            0.0,
-        ));
 }
