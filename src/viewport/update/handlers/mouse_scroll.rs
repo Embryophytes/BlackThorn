@@ -6,6 +6,8 @@ use bevy::app::Update;
 use bevy::input::mouse::MouseWheel;
 use bevy::window::PrimaryWindow;
 
+use ops::tanh;
+
 use crate::ui::core::state::UIState;
 use crate::viewport::core::camera::ViewportCamera;
 
@@ -53,7 +55,7 @@ fn mouse_wheel_scroll(
     for event in mouse_wheel_event_reader.read() {
         match event.unit {
             MouseScrollUnit::Line => {
-                projection.scale += event.y;
+                projection.scale += event.y * projection.scale / 20.;
             }
             MouseScrollUnit::Pixel => todo!(),
         }
