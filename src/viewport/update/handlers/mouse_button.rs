@@ -22,7 +22,6 @@ impl Plugin for MouseButtonHandler {
 }
 
 fn mouse_right_button_hold(
-    // mut cursor_moved_event_reader: EventReader<CursorMoved>,
     mut mouse_motion_event_reader: EventReader<MouseMotion>,
     primary_window_query: Query<&Window, With<PrimaryWindow>>,
     ui_state: Res<UIState>,
