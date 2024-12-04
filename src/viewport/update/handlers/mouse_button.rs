@@ -61,6 +61,7 @@ fn mouse_right_button_hold(
     };
 
     for event in mouse_motion_event_reader.read() {
-        transform.translation += Vec3::new((-1.) * event.delta.x, event.delta.y, 0.0f32) * projection.scale;
+        transform.translation +=
+            Vec3::new((-1.) * event.delta.x, event.delta.y, 0.0f32) * projection.scale;
     }
 }
