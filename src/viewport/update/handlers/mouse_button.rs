@@ -25,6 +25,7 @@ fn mouse_right_button_hold(
     mut mouse_motion_event_reader: EventReader<MouseMotion>,
     primary_window_query: Query<&Window, With<PrimaryWindow>>,
     ui_state: Res<UIState>,
+    viewport_camera_projection_query: Query<&mut OrthographicProjection, With<ViewportCamera>>,
     mut viewport_camera_transform_query: Query<&mut Transform, With<ViewportCamera>>,
 ) {
     let cursor_position = match primary_window_query.single().cursor_position() {
@@ -54,7 +55,12 @@ fn mouse_right_button_hold(
         _ => unreachable!(),
     };
 
+    let projection = match viewport_camera_projection_query.get_single() {
+        Ok(projection) => projection,
+        _ => unreachable!(),
+    };
+
     for event in mouse_motion_event_reader.read() {
-        transform.translation += Vec3::new((-1.) * event.delta.x, event.delta.y, 0.0f32);
+        transform.translation += Vec3::new((-1.) * event.delta.x, event.delta.y, 0.0f32) * projection.scale;
     }
 }

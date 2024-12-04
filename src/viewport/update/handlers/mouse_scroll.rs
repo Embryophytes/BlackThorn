@@ -6,8 +6,6 @@ use bevy::app::Update;
 use bevy::input::mouse::MouseWheel;
 use bevy::window::PrimaryWindow;
 
-use ops::tanh;
-
 use crate::ui::core::state::UIState;
 use crate::viewport::core::camera::ViewportCamera;
 
