@@ -37,7 +37,7 @@ fn initialize_camera(
 
     commands.spawn((
         Mesh2d(shape),
-        MeshMaterial2d(materials.add(Color::srgb(0.3f32, 0.4f32, 0.5f32))),
+        MeshMaterial2d(materials.add(Color::srgb(0.2f32, 0.3f32, 0.3f32))),
         Transform::from_xyz(0.0, 0.0, 0.0),
         TableComponent { size: table_size },
         DraggableComponent,
