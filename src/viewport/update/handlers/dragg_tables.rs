@@ -24,7 +24,10 @@ fn mouse_left_button_hold(
     mut mouse_motion_event_reader: EventReader<MouseMotion>,
     primary_window_query: Query<&Window, With<PrimaryWindow>>,
     ui_state: Res<UIState>,
-    mut tables_transform_mesh_query: Query<(&mut Transform, &SelectComponent), With<TableComponent>>,
+    mut tables_transform_mesh_query: Query<
+        (&mut Transform, &SelectComponent),
+        With<TableComponent>,
+    >,
     mut viewport_camera_projection_query: Query<&mut OrthographicProjection, With<ViewportCamera>>,
 ) {
     let cursor_position = match primary_window_query.single().cursor_position() {
@@ -55,8 +58,7 @@ fn mouse_left_button_hold(
     };
 
     for (mut transform, select_component) in tables_transform_mesh_query.iter_mut() {
-        if select_component.selected
-        {
+        if select_component.selected {
             for event in mouse_motion_event_reader.read() {
                 transform.translation +=
                     Vec3::new(event.delta.x, (-1.) * event.delta.y, 0.0f32) * projection.scale;

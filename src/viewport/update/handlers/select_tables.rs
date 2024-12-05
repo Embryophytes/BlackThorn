@@ -23,10 +23,14 @@ fn mouse_left_button_press(
     primary_window_query: Query<&Window, With<PrimaryWindow>>,
     ui_state: Res<UIState>,
     mut materials: ResMut<Assets<ColorMaterial>>,
-    mut tables_transform_selection_query: Query<(&Transform, &mut SelectComponent, &MeshMaterial2d<ColorMaterial>, &TableComponent)>,
+    mut tables_transform_selection_query: Query<(
+        &Transform,
+        &mut SelectComponent,
+        &MeshMaterial2d<ColorMaterial>,
+        &TableComponent,
+    )>,
     camera_global_transform_query: Query<(&Camera, &GlobalTransform), With<ViewportCamera>>,
 ) {
-
     let cursor_position = match primary_window_query.single().cursor_position() {
         Some(position) => position,
         None => return,
@@ -58,17 +62,21 @@ fn mouse_left_button_press(
         .map(|cursor| camera.viewport_to_world(camera_transform, cursor))
         .map(|ray| ray.unwrap().origin.truncate())
     {
-        for (transform, mut select_component, color_material, table_component) in tables_transform_selection_query.iter_mut() {
+        for (transform, mut select_component, color_material, table_component) in
+            tables_transform_selection_query.iter_mut()
+        {
             if cursor_world_position.x >= transform.translation.x - table_component.size.x / 2.
                 && cursor_world_position.x <= transform.translation.x + table_component.size.x / 2.
                 && cursor_world_position.y >= transform.translation.y - table_component.size.y / 2.
                 && cursor_world_position.y <= transform.translation.y + table_component.size.y / 2.
             {
                 select_component.selected = true;
-                materials.get_mut(color_material).unwrap().color = Color::srgb(0.3f32, 0.4f32, 0.5f32);
+                materials.get_mut(color_material).unwrap().color =
+                    Color::srgb(0.3f32, 0.4f32, 0.5f32);
             } else {
                 select_component.selected = false;
-                materials.get_mut(color_material).unwrap().color = Color::srgb(0.2f32, 0.3f32, 0.3f32);
+                materials.get_mut(color_material).unwrap().color =
+                    Color::srgb(0.2f32, 0.3f32, 0.3f32);
             }
         }
     }
