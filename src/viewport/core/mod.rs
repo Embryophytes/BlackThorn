@@ -4,11 +4,15 @@ use bevy::app::Plugin;
 use bevy::app::Startup;
 use camera::ViewportCamera;
 use config::ViewportConfig;
+use draggable::DraggableComponent;
 use state::ViewportState;
+use table::TableComponent;
 
 pub mod camera;
 pub mod config;
+pub mod draggable;
 pub mod state;
+pub mod table;
 
 pub struct InitializeViewport;
 
@@ -25,41 +29,17 @@ fn initialize_camera(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    const X_EXTENT: f32 = 900.;
+    let table_size = Vec2::new(80., 100.);
 
     commands.spawn((Camera2d, ViewportCamera));
 
-    let shapes = [
-        meshes.add(Circle::new(50.0)),
-        meshes.add(CircularSector::new(50.0, 1.0)),
-        meshes.add(CircularSegment::new(50.0, 1.25)),
-        meshes.add(Ellipse::new(25.0, 50.0)),
-        meshes.add(Annulus::new(25.0, 50.0)),
-        meshes.add(Capsule2d::new(25.0, 50.0)),
-        meshes.add(Rhombus::new(75.0, 100.0)),
-        meshes.add(Rectangle::new(50.0, 100.0)),
-        meshes.add(RegularPolygon::new(50.0, 6)),
-        meshes.add(Triangle2d::new(
-            Vec2::Y * 50.0,
-            Vec2::new(-50.0, -50.0),
-            Vec2::new(50.0, -50.0),
-        )),
-    ];
-    let num_shapes = shapes.len();
+    let shape = meshes.add(Rectangle::new(table_size.x, table_size.y));
 
-    for (i, shape) in shapes.into_iter().enumerate() {
-        // Distribute colors evenly across the rainbow.
-        let color = Color::hsl(360. * i as f32 / num_shapes as f32, 0.95, 0.7);
-
-        commands.spawn((
-            Mesh2d(shape),
-            MeshMaterial2d(materials.add(color)),
-            Transform::from_xyz(
-                // Distribute shapes from -X_EXTENT/2 to +X_EXTENT/2.
-                -X_EXTENT / 2. + i as f32 / (num_shapes - 1) as f32 * X_EXTENT,
-                0.0,
-                0.0,
-            ),
-        ));
-    }
+    commands.spawn((
+        Mesh2d(shape),
+        MeshMaterial2d(materials.add(Color::srgb(0.3f32, 0.4f32, 0.5f32))),
+        Transform::from_xyz(0.0, 0.0, 0.0),
+        TableComponent { size: table_size },
+        DraggableComponent,
+    ));
 }
