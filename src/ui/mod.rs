@@ -12,6 +12,11 @@ use bevy_egui::egui::TopBottomPanel;
 use bevy_egui::EguiContexts;
 use bevy_egui::EguiPlugin;
 
+use thorn_root::database::engine::DatabaseEngine;
+use thorn_root::database::postgres_engine::PostgresEngine;
+use thorn_root::schema::column::Column;
+use thorn_root::schema::Schema;
+
 use crate::add_menu_button;
 use crate::add_submenu;
 use crate::viewport::core::draggable::DraggableComponent;
@@ -74,6 +79,24 @@ fn egui_system(
                     }),
                     ("Add column", "Ctrl + M", {
                         ui_state.set_show_table_column_form(true);
+                    }),
+                    ("Generate SQL file", "Ctrl + Q", {
+                        let mut schema = Schema::new();
+                        for (name, columns) in table_names_columns_component_query.iter() {
+                            schema.add_table(&name.name).unwrap();
+                            let users_table = schema.get_table_mut(&name.name).unwrap();
+                            for column in &columns.columns {
+                                users_table.add_column(Column::new(
+                                    &column.name,
+                                    column.data_type.clone().into(),
+                                    column.primary_key,
+                                    false,
+                                    column.nullable
+                                )).unwrap();
+                            }
+                        }
+                    
+                        info!("{}", PostgresEngine::default().generate_migration_plan(&mut schema).unwrap().get_sql());
                     })
                 );
             });
@@ -221,9 +244,5 @@ fn egui_system(
                     ui_state.set_show_table_column_form(false);
                 }
             });
-    }
-
-    for (name, columns) in table_names_columns_component_query.iter() {
-        info!("{:?}, {:#?}", name.name, columns.columns);
     }
 }
