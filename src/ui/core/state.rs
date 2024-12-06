@@ -45,8 +45,12 @@ impl OccupiedScreenSpace {
 #[derive(Default, Resource)]
 pub struct UIState {
     occupied_space: OccupiedScreenSpace,
+
+    table_name: String,
+    show_table_name_form: bool,
 }
 
+#[allow(dead_code)]
 impl UIState {
     pub fn occupied_space(&self) -> &OccupiedScreenSpace {
         &self.occupied_space
@@ -56,8 +60,31 @@ impl UIState {
         &mut self.occupied_space
     }
 
-    #[allow(dead_code)]
     pub fn set_occupied_space(&mut self, occupied_spcae: OccupiedScreenSpace) {
         self.occupied_space = occupied_spcae;
+    }
+
+    pub fn show_table_name_form(&self) -> bool {
+        self.show_table_name_form
+    }
+
+    pub fn show_table_name_form_mut(&mut self) -> &mut bool {
+        &mut self.show_table_name_form
+    }
+
+    pub fn set_show_table_name_form(&mut self, show_table_name_form: bool) {
+        self.show_table_name_form = show_table_name_form;
+    }
+
+    pub fn table_name(&self) -> &str {
+        &self.table_name
+    }
+
+    pub fn table_name_mut(&mut self) -> &mut String {
+        &mut self.table_name
+    }
+
+    pub fn set_table_name(&mut self, table_name: String) {
+        self.table_name = table_name;
     }
 }

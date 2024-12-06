@@ -4,9 +4,7 @@ use bevy::app::Plugin;
 use bevy::app::Startup;
 use camera::ViewportCamera;
 use config::ViewportConfig;
-use draggable::DraggableComponent;
 use state::ViewportState;
-use table::TableComponent;
 
 pub mod camera;
 pub mod config;
@@ -24,22 +22,6 @@ impl Plugin for InitializeViewport {
     }
 }
 
-fn initialize_camera(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-) {
-    let table_size = Vec2::new(80., 100.);
-
+fn initialize_camera(mut commands: Commands) {
     commands.spawn((Camera2d, ViewportCamera));
-
-    let shape = meshes.add(Rectangle::new(table_size.x, table_size.y));
-
-    commands.spawn((
-        Mesh2d(shape),
-        MeshMaterial2d(materials.add(Color::srgb(0.2f32, 0.3f32, 0.3f32))),
-        Transform::from_xyz(0.0, 0.0, 0.0),
-        TableComponent { size: table_size },
-        DraggableComponent,
-    ));
 }
