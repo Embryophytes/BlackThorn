@@ -25,3 +25,16 @@ pub enum DataType {
     Boolean,
     Date,
 }
+
+impl From<DataType> for thorn_root::schema::data_type::DataType {
+    fn from(value: DataType) -> Self {
+        match value {
+            DataType::None => unreachable!(),
+            DataType::Integer => thorn_root::schema::data_type::DataType::Integer,
+            DataType::Float => thorn_root::schema::data_type::DataType::Float,
+            DataType::String => thorn_root::schema::data_type::DataType::String,
+            DataType::Boolean => thorn_root::schema::data_type::DataType::Boolean,
+            DataType::Date => thorn_root::schema::data_type::DataType::Date,
+        }
+    }
+}
