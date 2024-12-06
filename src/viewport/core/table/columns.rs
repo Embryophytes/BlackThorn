@@ -5,6 +5,7 @@ pub struct TableColumnsComponent {
     pub columns: Vec<TableColumn>,
 }
 
+#[allow(dead_code)]
 #[derive(Default, Debug)]
 pub struct TableColumn {
     pub name: String,
