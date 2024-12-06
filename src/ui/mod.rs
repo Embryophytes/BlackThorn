@@ -14,6 +14,8 @@ use bevy_egui::EguiPlugin;
 
 use crate::add_menu_button;
 use crate::add_submenu;
+use crate::viewport::core::draggable::DraggableComponent;
+use crate::viewport::core::table::TableComponent;
 
 pub mod core;
 
@@ -34,6 +36,9 @@ fn egui_system(
     mut contexts: EguiContexts,
     mut ui_state: ResMut<UIState>,
     mut exit: EventWriter<AppExit>,
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
     let ctx = contexts.ctx_mut();
 
@@ -54,6 +59,23 @@ fn egui_system(
                         "File",
                         ("Quit", "Ctrl + Q", {
                             exit.send(AppExit::Success);
+                        })
+                    );
+                    add_submenu!(
+                        ui,
+                        "Tools",
+                        ("Add table", "Ctrl + N", {
+                            let table_size = Vec2::new(80., 100.);
+
+                            let shape = meshes.add(Rectangle::new(table_size.x, table_size.y));
+
+                            commands.spawn((
+                                Mesh2d(shape),
+                                MeshMaterial2d(materials.add(Color::srgb(0.2f32, 0.3f32, 0.3f32))),
+                                Transform::from_xyz(0.0, 0.0, 0.0),
+                                TableComponent { size: table_size },
+                                DraggableComponent,
+                            ));
                         })
                     );
                 });
