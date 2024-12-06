@@ -32,7 +32,7 @@ While the application is still under active development, its primary goal is to 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/BlackThorn.git
+   git clone https://github.com/Embryophytes/BlackThorn.git
    cd BlackThorn
    ```
 
