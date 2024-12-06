@@ -14,7 +14,6 @@ use bevy_egui::EguiPlugin;
 
 use crate::add_menu_button;
 use crate::add_submenu;
-use crate::viewport::core::camera::ViewportCamera;
 use crate::viewport::core::draggable::DraggableComponent;
 use crate::viewport::core::table::TableComponent;
 
@@ -67,9 +66,9 @@ fn egui_system(
                         "Tools",
                         ("Add table", "Ctrl + N", {
                             let table_size = Vec2::new(80., 100.);
-                        
+
                             let shape = meshes.add(Rectangle::new(table_size.x, table_size.y));
-                        
+
                             commands.spawn((
                                 Mesh2d(shape),
                                 MeshMaterial2d(materials.add(Color::srgb(0.2f32, 0.3f32, 0.3f32))),
