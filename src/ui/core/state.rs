@@ -1,5 +1,7 @@
 use bevy::prelude::Resource;
 
+use crate::viewport::core::table::columns::DataType;
+
 #[derive(Default)]
 pub struct OccupiedScreenSpace {
     left: f32,
@@ -48,6 +50,13 @@ pub struct UIState {
 
     table_name: String,
     show_table_name_form: bool,
+
+    selected_table_to_add_columnn: String,
+    selected_column_data_type: DataType,
+    selected_column_name: String,
+    selected_column_is_nullable: bool,
+    selected_column_is_pk: bool,
+    show_table_column_form: bool,
 }
 
 #[allow(dead_code)]
@@ -86,5 +95,77 @@ impl UIState {
 
     pub fn set_table_name(&mut self, table_name: String) {
         self.table_name = table_name;
+    }
+
+    pub fn show_table_column_form(&self) -> bool {
+        self.show_table_column_form
+    }
+
+    pub fn show_table_column_form_mut(&mut self) -> &mut bool {
+        &mut self.show_table_column_form
+    }
+
+    pub fn set_show_table_column_form(&mut self, show_table_column_form: bool) {
+        self.show_table_column_form = show_table_column_form;
+    }
+
+    pub fn selected_column_data_type(&self) -> &DataType {
+        &self.selected_column_data_type
+    }
+
+    pub fn selected_column_data_type_mut(&mut self) -> &mut DataType {
+        &mut self.selected_column_data_type
+    }
+
+    pub fn set_selected_column_data_type(&mut self, selected_column: DataType) {
+        self.selected_column_data_type = selected_column;
+    }
+
+    pub fn selected_column_is_nullable(&self) -> bool {
+        self.selected_column_is_nullable
+    }
+
+    pub fn selected_column_is_nullable_mut(&mut self) -> &mut bool {
+        &mut self.selected_column_is_nullable
+    }
+
+    pub fn set_selected_column_is_nullable(&mut self, selected_column_is_nullable: bool) {
+        self.selected_column_is_nullable = selected_column_is_nullable;
+    }
+
+    pub fn selected_column_is_pk(&self) -> bool {
+        self.selected_column_is_pk
+    }
+
+    pub fn selected_column_is_pk_mut(&mut self) -> &mut bool {
+        &mut self.selected_column_is_pk
+    }
+
+    pub fn set_selected_column_is_pk(&mut self, selected_column_is_pk: bool) {
+        self.selected_column_is_pk = selected_column_is_pk;
+    }
+
+    pub fn selected_table_to_add_columnn(&self) -> &str {
+        &self.selected_table_to_add_columnn
+    }
+
+    pub fn selected_table_to_add_columnn_mut(&mut self) -> &mut String {
+        &mut self.selected_table_to_add_columnn
+    }
+
+    pub fn set_selected_table_to_add_columnn(&mut self, selected_table_to_add_columnn: String) {
+        self.selected_table_to_add_columnn = selected_table_to_add_columnn;
+    }
+
+    pub fn selected_column_name(&self) -> &str {
+        &self.selected_column_name
+    }
+
+    pub fn selected_column_name_mut(&mut self) -> &mut String {
+        &mut self.selected_column_name
+    }
+
+    pub fn set_selected_column_name(&mut self, selected_column_name: String) {
+        self.selected_column_name = selected_column_name;
     }
 }
