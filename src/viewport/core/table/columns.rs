@@ -13,18 +13,13 @@ pub struct TableColumn {
     pub nullable: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub enum DataType {
+    #[default]
     None,
     Integer,
     Float,
     String,
     Boolean,
     Date,
-}
-
-impl Default for DataType {
-    fn default() -> Self {
-        DataType::None
-    }
 }
